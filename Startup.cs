@@ -7,6 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using AspNetCoreWebApp.Data;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace AspNetCoreWebApp
 {
@@ -23,6 +27,9 @@ namespace AspNetCoreWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlite(Configuration.GetConnectionString("ApplicationDbContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +54,15 @@ namespace AspNetCoreWebApp
             {
                 endpoints.MapRazorPages();
             });
+
+            var defaultCulture = new CultureInfo("pt-BR");
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(defaultCulture),
+                SupportedCultures = new List<CultureInfo> { defaultCulture },
+                SupportedUICultures = new List<CultureInfo> { defaultCulture }
+            };
+            app.UseRequestLocalization(localizationOptions);
         }
     }
 }
