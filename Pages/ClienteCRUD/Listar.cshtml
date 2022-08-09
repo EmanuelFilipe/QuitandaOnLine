@@ -1,0 +1,76 @@
+﻿@page
+@model AspNetCoreWebApp.Pages.ClienteCRUD.ListarModel
+
+@{
+	ViewData["titulo"] = "Listagem de Clientes";
+	Layout = "_Template";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>@ViewData["titulo"]</title>
+</head>
+<body>
+	<div class="mt-4 mb-3 float-right">
+		<buton class="btn btn-info" asp-page="./Incluir" >Create New</buton>
+	</div>
+
+	@if (Model != null && Model.Clientes != null && Model.Clientes.Count > 0)
+	{
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						@Html.DisplayNameFor(model => model.Clientes[0].Nome)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.Clientes[0].DataNascimento)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.Clientes[0].CPF)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.Clientes[0].Email)
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Clientes)
+				{
+					<tr>
+						<td>
+							@Html.DisplayFor(modelItem => item.Nome)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.DataNascimento)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.CPF)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Email)
+						</td>
+						<td>
+							<a asp-page="./Alterar" asp-route-id="@item.IdCliente">Alterar</a>
+							<form method="post" class="d-inline-block" asp-page-handler="delete" asp-route-id="@item.IdCliente">
+								<button class="btn btn-danger btn-sm" type="button" onclick="confirmarExclusao(this);">Excluir</button>
+							</form>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<h2>Não há clientes cadastrados.</h2>
+	}
+		@section Scripts {
+			@{await Html.RenderPartialAsync("_CustomConfirm");} 
+		}
+</body>
+</html>
